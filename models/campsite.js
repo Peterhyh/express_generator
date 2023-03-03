@@ -4,7 +4,9 @@ const Schema = mongoose.Schema;
 
 require('mongoose-currency').loadType(mongoose);
 const Currency = mongoose.Types.Currency;
-
+//Mongoose Population: Updating schema-------------------------------------------------------------START
+//Changing author.type into 'mongoose.Schema.Types.ObjectId' to store reference to user document through the user documents object ID.
+//Replace the bottom property with "ref: 'User'" to hold the name of the model for that document.
 //documents storing comments about a campsite
 const commentSchema = new Schema({
     rating: {
@@ -18,13 +20,13 @@ const commentSchema = new Schema({
         required: true
     },
     author: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true
     }
 }, {
     timestamps: true
 });
-
+//Mongoose Population: Updating schema-------------------------------------------------------------END
 
 const campsiteSchema = new Schema({
     name: {
