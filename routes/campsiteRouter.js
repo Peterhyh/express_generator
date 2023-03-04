@@ -38,7 +38,7 @@ campsiteRouter.route('/')
             })
             .catch(err => next(err));
     });
-//Mongoose Population: Updating schema-------------------------------------------------------------END
+
 
 campsiteRouter.route('/:campsiteId')
     .get((req, res, next) => {
@@ -96,7 +96,6 @@ campsiteRouter.route('/:campsiteId/comments')
         Campsite.findById(req.params.campsiteId)
             .then(campsite => {
                 if (campsite) {
-                    // ensures when the comment is saved, it will have the id of the user who submitted the comment in the author field, so later we could access this field.
                     req.body.author = req.user._id
                     campsite.comments.push(req.body);
                     campsite.save()
@@ -141,6 +140,7 @@ campsiteRouter.route('/:campsiteId/comments')
             .catch(err => next(err));
     });
 
+
 campsiteRouter.route('/:campsiteId/comments/:commentId')
     .get((req, res, next) => {
         Campsite.findById(req.params.campsiteId)
@@ -170,6 +170,9 @@ campsiteRouter.route('/:campsiteId/comments/:commentId')
         Campsite.findById(req.params.campsiteId)
             .then(campsite => {
                 if (campsite && campsite.comments.id(req.params.commentId)) {
+                    if (req.user._id) {
+                        campsite.comments.id(req.params.commentId).author._id === req.user._id;
+                    }
                     if (req.body.rating) {
                         campsite.comments.id(req.params.commentId).rating = req.body.rating;
                     }
@@ -199,6 +202,9 @@ campsiteRouter.route('/:campsiteId/comments/:commentId')
         Campsite.findById(req.params.campsiteId)
             .then(campsite => {
                 if (campsite && campsite.comments.id(req.params.commentId)) {
+                    if (req.user._id) {
+                        campsite.comments.id(req.params.commentId).author._id === req.user._id;
+                    }
                     campsite.comments.id(req.params.commentId).remove();
                     campsite.save()
                         .then(campsite => {
@@ -219,5 +225,6 @@ campsiteRouter.route('/:campsiteId/comments/:commentId')
             })
             .catch(err => next(err));
     });
+
 
 module.exports = campsiteRouter;
