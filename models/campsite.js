@@ -7,6 +7,7 @@ const Currency = mongoose.Types.Currency;
 //Mongoose Population: Updating schema-------------------------------------------------------------START
 //Changing author.type into 'mongoose.Schema.Types.ObjectId' to store reference to user document through the user documents object ID.
 //Replace the bottom property with "ref: 'User'" to hold the name of the model for that document.
+//Next, go to campsiteRouter.js file to update the get method of campsiteRouter
 //documents storing comments about a campsite
 const commentSchema = new Schema({
     rating: {
@@ -21,7 +22,7 @@ const commentSchema = new Schema({
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true
+        ref: 'User'
     }
 }, {
     timestamps: true
