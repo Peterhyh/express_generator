@@ -4,12 +4,15 @@ const path = require('path');
 const logger = require('morgan');
 const passport = require('passport');
 const config = require('./config');
+
+
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const campsiteRouter = require('./routes/campsiteRouter');
 const promotionRouter = require('./routes/promotionRouter');
 const partnerRouter = require('./routes/partnerRouter');
 const uploadRouter = require('./routes/uploadRouter');
+
 
 const mongoose = require('mongoose');
 
@@ -31,6 +34,7 @@ connect.then(() => console.log('Connected correctly to server'),
 
 
 const app = express();
+
 
 app.all('*', (req, res, next) => {
   if (req.secure) {
