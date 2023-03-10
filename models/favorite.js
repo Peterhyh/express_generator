@@ -5,13 +5,13 @@ const Schema = mongoose.Schema;
 const favoriteSchema = new Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
+        ref: 'User'
     },
     campsites: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'campsites'
+        ref: 'Campsites'
     }]
-})
+});
 
 
 const Favorite = mongoose.model('Favorite', favoriteSchema)
