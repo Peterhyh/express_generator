@@ -9,8 +9,8 @@ favoriteRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
     .get(cors.cors, authenticate.verifyUser, (req, res, next) => {
         Favorite.find({ user: req.user._id })
-            .populate('User')
-            .populate('Campsites')
+            .populate('user')
+            .populate('campsites')
             .then(favorite => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -28,13 +28,6 @@ favoriteRouter.route('/')
                         if (!favArray.includes(favorite)) {
                             favArray.push(favorite);
                             console.log(`${favorite} was added to the list of favorites`);
-                            favorite.save()
-                                .then(favorite => {
-                                    res.statusCode = 200;
-                                    res.setHeader('Context-Type', 'application/json');
-                                    res.json(favorite)
-                                })
-                                .catch(err => next(err));
                         }
                     })
                 } else {
@@ -73,7 +66,6 @@ favoriteRouter.route('/')
             .catch(err => next(err));
     })
 
-//---------------------------------------------------------------------------------
 
 favoriteRouter.route('/:campsiteId')
     .options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
@@ -86,14 +78,19 @@ favoriteRouter.route('/:campsiteId')
     .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
         Favorite.findOne({ user: req.user._id })
             .then(favorite => {
-
-                console.log('-------LOG:', favorite);
-
                 if (favorite) {
                     if (!favorite.campsites.includes(req.params.campsiteId)) {
                         res.setHeader('Content-Type', 'application/json');
                         res.json(favorite);
-                        favorite.campsites.push(req.params.campsiteId)
+                        const favArray = favorite.campsites;
+                        favArray.push(req.params.campsiteId)
+                        favorite.save()
+                            .then(favorite => {
+                                res.statusCode = 200;
+                                res.setHeader('Content-Type', 'application/json');
+                                res.json(favorite);
+                            })
+                            .catch(err => next(err))
                     } else {
                         res.statusCode = 200;
                         res.setHeader('Content-Type', 'application/json');
@@ -122,11 +119,9 @@ favoriteRouter.route('/:campsiteId')
     .delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
         Favorite.findOne({ user: req.user._id })
             .then(favorite => {
-                if (favorite._id === (req.params.campsiteId)) {
-                    favorite._id.filter(removeId = (item) => {
-                        return item !== req.params.campsiteId
-                    })
-                    console.log('-------LOG:', favorite._id);
+                if (favorite.campsites.includes(req.params.campsiteId)) {
+                    const paramIndex = favorite.campsites.indexOf(req.params.campsiteId);
+                    favorite.campsites.splice(paramIndex, 1)
                     favorite.save()
                         .then(favorite => {
                             res.statusCode = 200;
@@ -140,7 +135,7 @@ favoriteRouter.route('/:campsiteId')
                     return next(err);
                 }
             })
+            .catch(err => next(err));
     })
-
 
 module.exports = favoriteRouter;

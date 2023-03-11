@@ -9,7 +9,7 @@ const favoriteSchema = new Schema({
     },
     campsites: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Campsites'
+        ref: 'Campsite'
     }]
 }, {
     timestamps: true
@@ -18,4 +18,4 @@ const favoriteSchema = new Schema({
 
 const Favorite = mongoose.model('Favorite', favoriteSchema)
 
-module.exports = Favorite
+module.exports = Favorite;
