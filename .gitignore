@@ -1,4 +1,4 @@
 node_modules
-bin/server.cert
-bin/server.key
+**/server.cert
+**/server.key
 config.js
